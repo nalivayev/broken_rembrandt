@@ -72,9 +72,9 @@ class PathChecker:
         v_list = listdir(p_path)
         while len(v_list) > 0:
             v_path = path.join(p_path, v_list[0])
-            if path.isfile(v_path):
+            v_name, v_extension = path.splitext(v_path)
+            if path.isfile(v_path) and v_extension.casefold() == ".jpg":
                 if not self.__checker.do(v_path):
-                    v_name, v_extension = path.splitext(v_path)
                     try:
                         self.__add_log_message(f"File {v_list[0]} is corrupt")
                         v_name = f"{v_name}.corrupt{v_extension}"

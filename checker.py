@@ -68,26 +68,27 @@ class PathChecker:
             self.__logger.info(p_message)
 
     def __do_recursively(self, p_path, p_recursively):
+        self.__add_log_message(f"Check the path {p_path}")
         v_list = listdir(p_path)
         while len(v_list) > 0:
             v_path = path.join(p_path, v_list[0])
-            v_list.pop(0)
             if path.isfile(v_path):
                 if not self.__checker.do(v_path):
                     v_name, v_extension = path.splitext(v_path)
                     try:
-                        self.__add_log_message(f"File {v_path} is corrupt")
+                        self.__add_log_message(f"File {v_list[0]} is corrupt")
                         v_name = f"{v_name}.corrupt{v_extension}"
                         rename(v_path, v_name)
                     except Exception:
                         self.__add_log_message(f"Error rename file {v_list[0]}")
                     else:
-                        self.__add_log_message(f"File {v_path} renamed to {v_name}")
+                        self.__add_log_message(f"File {v_list[0]} renamed to {v_name}")
                 else:
-                    self.__add_log_message(f"File {v_path} is good")
+                    self.__add_log_message(f"File {v_list[0]} is good")
             else:
                 if p_recursively and path.isdir(v_path):
                     self.__do_recursively(v_path, p_recursively)
+            v_list.pop(0)
 
     def do(self, p_logger: CheckerLogger, p_path, p_recursively):
         self.__logger = p_logger
